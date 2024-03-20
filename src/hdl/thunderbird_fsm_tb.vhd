@@ -214,7 +214,11 @@ begin
        assert w_lights_L = "000" report "bad on state L 4" severity failure;
        assert w_lights_R = "000" report "bad on state R 4" severity failure;
 	-----------------------------------------------------	
-	   wait;
+	
+	w_left <= '0';
+	w_right <= '0';
+	
+	wait;
 	end process;
 	
 end test_bench;

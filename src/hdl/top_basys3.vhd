@@ -11,8 +11,8 @@
 --| ---------------------------------------------------------------------------
 --|
 --| FILENAME      : top_basys3.vhd
---| AUTHOR(S)     : Capt Phillip Warner
---| CREATED       : 02/22/2018
+--| AUTHOR(S)     : Capt Phillip Warner, C3C Parker Douglas
+--| CREATED       : 02/22/2018 - Modified 19 March 2024
 --| DESCRIPTION   : This file implements the top level module for a BASYS 3 to 
 --|					drive a Thunderbird taillight controller FSM.
 --|
@@ -75,27 +75,77 @@ entity top_basys3 is
                                                         -- led(2:0)   --> R
 		
 		-- Buttons (5 total)
-		--btnC	:	in	std_logic
-		--btnU	:	in	std_logic;
 		btnL	:	in	std_logic;                    -- clk_reset
 		btnR	:	in	std_logic	                  -- fsm_reset
-		--btnD	:	in	std_logic;	
 	);
 end top_basys3;
 
 architecture top_basys3_arch of top_basys3 is 
   
 	-- declare components
+	-- thunderbird component
+	component thunderbird_fsm is
+        port(
+            i_clk, i_reset  : in    std_logic;
+            i_left, i_right : in    std_logic;
+            o_lights_L      : out   std_logic_vector(2 downto 0);
+            o_lights_R      : out   std_logic_vector(2 downto 0)
+        );
+    end component thunderbird_fsm;
+    
+    --clock divider
+    component clock_divider is
+        generic ( constant k_DIV : natural := 2	);
+        port ( 	
+            i_clk    : in std_logic;
+            i_reset  : in std_logic;
+            o_clk    : out std_logic
+        );
+     end component clock_divider;
+
+    --signals
+    signal w_clk : std_logic := '0';    --connection between o_clk and thunderbird clk
 
   
 begin
 	-- PORT MAPS ----------------------------------------
+	-- thunderbird port map
+	thunderbird_fsm_inst : thunderbird_fsm
+	   port map (
+	       -- inputs
+	       i_left  => sw(15),
+	       i_right => sw(0),
+	       i_reset => btnR,
+	       i_clk   => w_clk,
+	       
+	       -- outputs
+	       o_lights_L(0) => led(13),
+	       o_lights_L(1) => led(14),
+	       o_lights_L(2) => led(15),
+	       o_lights_R(0) => led(2),
+	       o_lights_R(1) => led(1),
+	       o_lights_R(2) => led(0)
+	   );
+	
+	-- clock divider port map
+	clock_divider_inst : clock_divider
+	   generic map ( k_DIV => 12500000 )
+	   port map (
+	       -- inputs
+	       i_clk   => clk,
+	       i_reset => btnL,
+	       
+	       -- outputs
+	       o_clk   => w_clk
+	   );
 
 	
 	
 	-- CONCURRENT STATEMENTS ----------------------------
 	
 	-- ground unused LEDs
+	led(12 downto 3) <= "0000000000";
+	
 	-- leave unused switches UNCONNECTED
 	
 	-- Ignore the warnings associated with these signals
