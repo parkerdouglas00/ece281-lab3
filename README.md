@@ -8,6 +8,11 @@ Tested on Windows 11.
 
 ---
 
+## Simulation Waveform
+![Waveform screenshot](Lab3Waveform.png)
+
+---
+
 ## Build the project
 
 You can simply open `thunderbird.xpr` and Vivado will do the rest!
