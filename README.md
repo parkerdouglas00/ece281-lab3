@@ -13,6 +13,11 @@ Tested on Windows 11.
 
 ---
 
+## Top-Level Architecture
+![Top-Level Architecture](Lab3TopLevelArchitecture.jpg)
+
+---
+
 ## Build the project
 
 You can simply open `thunderbird.xpr` and Vivado will do the rest!
