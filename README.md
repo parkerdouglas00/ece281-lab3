@@ -7,6 +7,11 @@ Targeted toward Digilent Basys3. Make sure to install the [board files](https://
 Tested on Windows 11.
 
 ---
+## Documentation Statement
+
+No outside help received.
+
+---
 
 ## Simulation Waveform
 ![Waveform screenshot](Lab3Waveform.png)
